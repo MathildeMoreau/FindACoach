@@ -3,7 +3,7 @@
     <div class="card-title">
       <h2>{{ coach.firstName }} {{ coach.lastName }}</h2>
       <div class="areas-list">
-        <span v-for="area in coach.areas" :key="area" class="area-pill" :class="area">{{ area }}</span>
+        <span v-for="area in coach.areas" :key="area" class="area-pill" :class="area" ref="area">{{ area }}</span>
       </div>
     </div>
     <p>{{ coach.description }}</p>
@@ -13,16 +13,24 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import BaseButton from './BaseButton.vue';
 export default {
   components: { BaseButton },
   props: ["coach"],
   methods: {
-    ...mapMutations(['writeToCoach']),
+    ...mapMutations('coaches', ['writeToCoach']),
     redirectToMessages(){
       this.writeToCoach(this.coach.id);
       this.$router.push('/contact');
+    }
+  },
+  computed: {
+    ...mapState('coaches', ['workField']),
+  },
+  data(){
+    return {
+      area: ''
     }
   }
 };

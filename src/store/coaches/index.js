@@ -1,4 +1,5 @@
 export default {
+  namespaced: true,
   state: {
     coaches: [
       {
@@ -21,6 +22,7 @@ export default {
       },
     ],
     currentCoach: null,
+    workField: []
   },
   getters: {
     getAllCoaches(state) {
@@ -28,7 +30,7 @@ export default {
     },
     getCurrentCoach(state) {
       return state.currentCoach;
-    },
+    }
   },
   mutations: {
     writeToCoach(state, payload) {
@@ -72,7 +74,6 @@ export default {
         }
 
         const data = await response.json();
-        const results = [];
 
         for (const d in data) {
           context.state.coaches.push({
@@ -84,7 +85,6 @@ export default {
             hourlyRate: data[d].hourlyRate,
           });
         }
-        context.commit("setCoaches", results);
       } catch (error) {
         console.log(error);
       }

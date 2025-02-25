@@ -9,9 +9,9 @@
   </base-button>
 </div>
 <div class="select-field">
-  <input type="checkbox" value="frontend" v-model="workField" checked>Frontend
-  <input type="checkbox" value="backend" v-model="workField" checked>Backend
-  <input type="checkbox" value="career" v-model="workField" checked>Career
+  <input type="checkbox" :value="frontend" v-model="workFields" >Frontend
+  <input type="checkbox" :value="backend" v-model="workFields" >Backend
+  <input type="checkbox" :value="career" v-model="workFields" >Career
 </div>
 
   <div v-for="coach in getAllCoaches" :key="coach.id">
@@ -27,16 +27,26 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   components: { BaseCard, BaseButton },
   computed: {
-    ...mapGetters(["getAllCoaches"]),
+    ...mapGetters('coaches', ["getAllCoaches"]),
+    workFields: {
+      set(value){
+        this.$store.state.workField = value;
+      }
+    }
   },
   methods: {
-    ...mapActions(['getAllCoachesFromDb']),
+    ...mapActions('coaches' , ['getAllCoachesFromDb']),
     redirectToNewCoach(){
       this.$router.push('/register')
     }
   }, 
   created(){
     this.getAllCoachesFromDb();
+  },
+  data(){
+    return {
+      workField: []
+    }
   }
 };
 </script>
