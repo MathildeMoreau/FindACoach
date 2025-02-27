@@ -1,26 +1,7 @@
 export default {
   namespaced: true,
   state: {
-    coaches: [
-      {
-        id: "c1",
-        firstName: "Maximilian",
-        lastName: "Schwarzmüller",
-        areas: ["frontend", "backend", "career"],
-        description:
-          "I'm Maximilian and I've worked as a freelance web developer for years. Let me help you become a developer as well!",
-        hourlyRate: 30,
-      },
-      {
-        id: "c2",
-        firstName: "Julie",
-        lastName: "Jones",
-        areas: ["frontend", "career"],
-        description:
-          "I am Julie and as a senior developer in a big tech company, I can help you get your first job or progress in your current role.",
-        hourlyRate: 30,
-      },
-    ],
+    coaches: [],
     currentCoach: null,
     workField: []
   },
@@ -29,11 +10,12 @@ export default {
       return state.coaches;
     },
     getCurrentCoach(state) {
+      console.log(state);
       return state.currentCoach;
     }
   },
   mutations: {
-    writeToCoach(state, payload) {
+    setCurrentCoach(state, payload) {
       const currentCoach = state.coaches.find((coach) => {
         return coach.id == payload;
       });
@@ -57,6 +39,9 @@ export default {
           }),
         }
       );
+    },
+    setCoaches(state, payload){
+      state.coaches = payload;
     }
   },
   actions: {
@@ -74,9 +59,29 @@ export default {
         }
 
         const data = await response.json();
+        const results = [
+          {
+            id: "c1",
+            firstName: "Maximilian",
+            lastName: "Schwarzmüller",
+            areas: ["frontend", "backend", "career"],
+            description:
+              "I'm Maximilian and I've worked as a freelance web developer for years. Let me help you become a developer as well!",
+            hourlyRate: 30,
+          },
+          {
+            id: "c2",
+            firstName: "Julie",
+            lastName: "Jones",
+            areas: ["frontend", "career"],
+            description:
+              "I am Julie and as a senior developer in a big tech company, I can help you get your first job or progress in your current role.",
+            hourlyRate: 30,
+          },
+        ]
 
         for (const d in data) {
-          context.state.coaches.push({
+          results.push({
             id: d,
             firstName: data[d].firstName,
             lastName: data[d].lastName,
@@ -85,6 +90,8 @@ export default {
             hourlyRate: data[d].hourlyRate,
           });
         }
+
+        context.commit('setCoaches', results);
       } catch (error) {
         console.log(error);
       }

@@ -1,6 +1,6 @@
 <template>
   <div class="contact-container">
-    <h3>Your message to {{ getCurrentCoach.firstName }} {{ getCurrentCoach.lastName }}</h3>
+    <h3>Your message to {{ coach.firstName }} {{ coach.lastName }}</h3>
     <form @submit.prevent="sendMessageToCoach">
       <div class="input-container">
         <label for="">Email</label>
@@ -8,7 +8,7 @@
       </div>
       <div class="input-container">
         <label for="">Message</label>
-        <textarea name="" id="" v-model="messageMessage"></textarea>
+        <textarea name="" v-model="messageMessage"></textarea>
       </div>
       <base-button>Submit</base-button>
     </form>
@@ -16,13 +16,14 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapMutations } from 'vuex'
 import BaseButton from '../UI/BaseButton.vue'
 export default {
   components: { BaseButton },
-    props: ['coach'],
+    props: ["id"],
     computed: {
-        ...mapGetters('coaches', ['getCurrentCoach'])
+    coach() {
+      return this.$store.getters["coaches/getAllCoaches"].find((c) => c.id === this.id);
     },
     data(){
       return {
@@ -40,6 +41,7 @@ export default {
         this.$router.push('/coaches');
       }
     }
+  }
 
 }
 </script>

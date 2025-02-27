@@ -15,24 +15,24 @@
 </div>
 
   <div v-for="coach in getAllCoaches" :key="coach.id">
-    <base-card :coach="coach"></base-card>
+    <coach-card :coach="coach"></coach-card>
   </div>
 </template>
 
 <script>
-import BaseCard from "../UI/BaseCard.vue";
 import BaseButton from "../UI/BaseButton.vue";
 import { mapActions, mapGetters } from "vuex";
+import CoachCard from './CoachCard.vue';
 
 export default {
-  components: { BaseCard, BaseButton },
+  components: { BaseButton, CoachCard },
+  data(){
+    return {
+      workFields: []
+    }
+  },
   computed: {
     ...mapGetters('coaches', ["getAllCoaches"]),
-    workFields: {
-      set(value){
-        this.$store.state.workField = value;
-      }
-    }
   },
   methods: {
     ...mapActions('coaches' , ['getAllCoachesFromDb']),
@@ -43,11 +43,6 @@ export default {
   created(){
     this.getAllCoachesFromDb();
   },
-  data(){
-    return {
-      workField: []
-    }
-  }
 };
 </script>
 
