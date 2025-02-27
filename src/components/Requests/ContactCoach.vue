@@ -1,6 +1,6 @@
 <template>
   <div class="contact-container">
-    <h3>Your message to {{ coach.firstName }} {{ coach.lastName }}</h3>
+    <h3>Your message</h3>
     <form @submit.prevent="sendMessageToCoach">
       <div class="input-container">
         <label for="">Email</label>
@@ -16,15 +16,11 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapActions } from 'vuex';
 import BaseButton from '../UI/BaseButton.vue'
 export default {
   components: { BaseButton },
     props: ["id"],
-    computed: {
-    coach() {
-      return this.$store.getters["coaches/getAllCoaches"].find((c) => c.id === this.id);
-    },
     data(){
       return {
         emailMessage: '',
@@ -32,17 +28,14 @@ export default {
       }
     },
     methods: {
-      ...mapMutations('requests', ['sendMessage']),
+      ...mapActions('requests', ["contactCoach"]),
       sendMessageToCoach(){
-        this.sendMessage({
+        this.contactCoach({
           'email': this.emailMessage,
           'message': this.messageMessage
         });
-        this.$router.push('/coaches');
       }
     }
-  }
-
 }
 </script>
 

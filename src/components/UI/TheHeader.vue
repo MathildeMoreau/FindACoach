@@ -1,7 +1,7 @@
 <template>
     <header>
         <nav>
-          <h1>FIND A COACH</h1>
+          <h1><router-link to="/">FIND A COACH</router-link></h1>
           <div class="header-links">
               <router-link to="/coaches">Coaches</router-link>
               <router-link to="/requests">Requests</router-link>
@@ -52,6 +52,10 @@ a:visited{
 
 a:hover{
     transform: scale(1.2);
+    border-bottom: 3px solid white;
+}
+
+a.router-link-exact-active{
     border-bottom: 3px solid white;
 }
 

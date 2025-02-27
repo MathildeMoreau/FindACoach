@@ -8,41 +8,77 @@
     Register a new coach !
   </base-button>
 </div>
-<div class="select-field">
-  <input type="checkbox" :value="frontend" v-model="workFields" >Frontend
-  <input type="checkbox" :value="backend" v-model="workFields" >Backend
-  <input type="checkbox" :value="career" v-model="workFields" >Career
+<div v-if="isLoading">
+  <base-spinner></base-spinner>
 </div>
-
-  <div v-for="coach in getAllCoaches" :key="coach.id">
-    <coach-card :coach="coach"></coach-card>
-  </div>
+<div v-if="hasCoaches && !isLoading">
+    <coach-filter @change-filter="setFilter"></coach-filter>
+  
+    <div v-for="coach in filteredCoaches" :key="coach.id">
+      <coach-card :coach="coach"></coach-card>
+    </div>
+</div>
+<div v-if="!hasCoaches && !isLoading">
+  <h2>No coach for now !</h2>
+</div>
 </template>
 
 <script>
 import BaseButton from "../UI/BaseButton.vue";
 import { mapActions, mapGetters } from "vuex";
 import CoachCard from './CoachCard.vue';
+import CoachFilter from "./CoachFilter.vue";
+import BaseSpinner from "../UI/BaseSpinner.vue";
 
 export default {
-  components: { BaseButton, CoachCard },
+  components: { BaseButton, CoachCard, CoachFilter, BaseSpinner },
   data(){
     return {
-      workFields: []
+      isLoading: false,
+      activeFilter: {
+        frontend: true,
+        backend: true,
+        career: true
+      }
     }
   },
   computed: {
     ...mapGetters('coaches', ["getAllCoaches"]),
+    ...mapGetters('coaches', ["hasCoaches"]),
+    filteredCoaches(){
+      const coaches = this.getAllCoaches;
+      return coaches.filter((coach) => {
+        if (this.activeFilter.frontend && coach.areas.value.includes('frontend')){
+          return true;
+        }
+        if (this.activeFilter.backend && coach.areas.value.includes('backend')){
+          return true;
+        }
+        if (this.activeFilter.career && coach.areas.value.includes('career')){
+          return true;
+        }
+        console.log(coach);
+        return false;
+      })
+    }
   },
   methods: {
     ...mapActions('coaches' , ['getAllCoachesFromDb']),
     redirectToNewCoach(){
       this.$router.push('/register')
+    },
+    setFilter(updatedFilter){
+      this.activeFilter = updatedFilter;
+    },
+    async loadCoaches(){
+      this.isLoading = true;
+      await this.getAllCoachesFromDb();
+      this.isLoading = false;
     }
   }, 
   created(){
-    this.getAllCoachesFromDb();
-  },
+    this.loadCoaches();
+  }
 };
 </script>
 

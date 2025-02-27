@@ -26,10 +26,8 @@ const routes = [
     component: AddNewCoach
   },
   {
-    path: '/contact/:id',
-    component: ContactCoach,
-    name: 'contact',
-    props: true
+    path: '/contact',
+    component: ContactCoach
   },
   {
     path: '/',

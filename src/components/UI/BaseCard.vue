@@ -2,7 +2,7 @@
     <div class="card-title">
       <h2>{{ coach.firstName }} {{ coach.lastName }}</h2>
       <div class="areas-list">
-        <span v-for="area in coach.areas" :key="area" class="area-pill" :class="area" ref="area">{{ area }}</span>
+        <span v-for="area in coach.areas.value" :key="area" class="area-pill" :class="area" ref="area">{{ area }}</span>
       </div>
     </div>
     <p>{{ coach.description }}</p>

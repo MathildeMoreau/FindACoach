@@ -2,34 +2,39 @@
   <h1>Add new coach</h1>
   <div class="form-container">
     <form @submit.prevent="submitNewCoachForm">
-      <div>
+      <div :class="{invalid: !firstName.isValid}">
         <label for="">Firstname</label>
-        <input type="text" v-model="firstName" />
+        <input type="text" v-model.trim="firstName.value" @blur="clearValidity(firstName)"/>
       </div>
-      <div>
+      <div :class="{invalid: !lastName.isValid}">
         <label for="">Lastname</label>
-        <input type="text" v-model="lastName" />
+        <input type="text" v-model.trim="lastName.value" @blur="clearValidity(lastName)" />
       </div>
-      <div>
+      <div :class="{invalid: !areas.isValid}">
         <label for="">Areas</label>
-        <div class="area-div">
-          <input type="checkbox" value="frontend" v-model="areas" /> Frontend
-          <input type="checkbox" value="backend" v-model="areas" /> Backend
-          <input type="checkbox" value="career" v-model="areas" /> Career
+        <div class="area-div" :class="{invalid: !areas.isValid}">
+          <input type="checkbox" value="frontend" v-model="areas.value" @blur="clearValidity(areas)"/>
+          <label for="frontend">Frontend</label> 
+          <input type="checkbox" value="backend" v-model="areas.value" @blur="clearValidity(areas)" />
+          <label for="backend">Backend</label> 
+          <input type="checkbox" value="career" v-model="areas.value" @blur="clearValidity(areas)" />
+          <label for="career">Career</label>
         </div>
       </div>
-      <div>
+      <div :class="{invalid: !description.isValid}">
         <label for="">Description</label>
         <textarea
           name="description"
           id="description"
-          v-model="description"
+          v-model="description.value"
+          @blur="clearValidity(description)"
         ></textarea>
       </div>
-      <div>
+      <div :class="{invalid: !hourlyRate.isValid}">
         <label for="">Rate per hour</label>
-        <input type="number" v-model="hourlyRate" />
+        <input type="number" v-model="hourlyRate.value" @blur="clearValidity(hourlyRate)" />
       </div>
+      <p v-if="!formIsValid">Please fix the above errors and submit again</p>
       <base-button>Submit</base-button>
     </form>
   </div>
@@ -42,24 +47,73 @@ import BaseButton from '../UI/BaseButton.vue'
 export default {
   data() {
     return {
-      firstName: "",
-      lastName: "",
-      areas: [],
-      description: "",
-      hourlyRate: 0,
+      firstName: {
+        value: '',
+        isValid: true
+      },
+      lastName: {
+        value: '',
+        isValid: true
+      },
+      areas: {
+        value: [],
+        isValid: true
+      },
+      description: {
+        value: '',
+        isValid: true
+      },
+      hourlyRate: {
+        value: 0,
+        isValid: true
+      },
+      formIsValid: true
     };
   },
   methods: {
-    ...mapActions(["addCoach"]),
+    ...mapActions('coaches', ["addCoach"]),
     submitNewCoachForm() {
+      this.validateForm();
+      if (!this.formIsValid){
+        return;
+      }
       this.addCoach({
-        firstName: this.firstName,
-        lastName: this.lastName,
+        firstName: this.firstName.value,
+        lastName: this.lastName.value,
         areas: this.areas,
-        description: this.description,
-        hourlyRate: this.hourlyRate,
+        description: this.description.value,
+        hourlyRate: this.hourlyRate.value,
       });
+      this.$router.replace('/coaches');
     },
+    validateForm(){
+      this.formIsValid = true;
+
+      if (this.firstName.value === ''){
+        this.firstName.isValid = false;
+        this.formIsValid = false;
+      }
+      if (this.lastName.value === ''){
+        this.lastName.isValid = false;
+        this.formIsValid = false;
+      }
+      if (this.description.value === ''){
+        this.description.isValid = false;
+        this.formIsValid = false;
+      }
+      if (!this.hourlyRate.value || this.hourlyRate.value < 0){
+        this.hourlyRate.isValid = false;
+        this.formIsValid = false;
+      }
+      if (this.areas.value.length == 0 ){
+        this.areas.isValid = false;
+        this.formIsValid = false;
+      }
+    },
+    clearValidity(input){
+      console.log(input);
+      input.isValid = true;
+    }
   },
   components: {
     BaseButton
@@ -111,5 +165,13 @@ export default {
     margin-top: 3rem;
     width: 30%;
     align-self: center;
+  }
+
+  .invalid label{
+    color: red;
+  }
+
+  .invalid input, .invalid textarea{
+    border: 1px solid red;
   }
 </style>

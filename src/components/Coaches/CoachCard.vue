@@ -2,8 +2,8 @@
   <div class="card-content">
     <base-card :coach="coach"></base-card>
     <div class="button-container">
-        <base-button><router-link :to="{name:'coach-profile', params: {id : coach.id}}">About me</router-link></base-button>
-        <base-button><router-link :to="{name:'contact', params: {id : coach.id}}">Contact me</router-link></base-button>
+        <router-link :to="{name:'coach-profile', params: {id : coach.id}}"><base-button>About me</base-button></router-link>
+       <router-link to="/contact"> <base-button>Contact me</base-button></router-link>
     </div>
   </div>
 </template>
@@ -46,11 +46,8 @@ export default {
   justify-content: space-around;
 }
 button {
-  width: 30%;
+  width: 100%;
+  padding: 10px 30px;
 }
 
-a{
-  color: white;
-  text-decoration: none;
-}
 </style>
