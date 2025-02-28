@@ -1,3 +1,3 @@
 # Try it !
 
-https://mathildemoreau.github.io/FindACoach/coaches
+https://mathildemoreau.github.io/FindACoach
